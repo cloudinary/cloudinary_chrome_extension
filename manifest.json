@@ -1,0 +1,44 @@
+{
+  "name": "Cloudinary",
+  "version": "0.0.1",
+  "manifest_version": 2,
+  "description": "Image Management In The Cloud.Cloudinary is an end-to-end image management solution for your Web and mobile applications",
+  "homepage_url": "http://www.cloudinary.com",
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "default_locale": "en",
+  "background": {
+    "scripts":["js/models/cloudinary.js","js/models/response.js","js/background.js"],
+    "persistent": true
+  },
+  "permissions": [
+    "tabs",
+    "activeTab",
+    "webRequest",
+    "webRequestBlocking",
+    "\u003Call_urls>"
+  ],
+  "browser_action": {
+    "default_title": "Cloudinary",
+    "default_icon": "icons/icon19.png",
+    "default_popup": "html/popup.html"
+  },
+  "content_scripts": [
+    {
+    "all_frames": false,
+      "matches": [
+        "*://*/*"
+      ],
+      "js": [
+        "js/models/cloudinary.js",
+        "js/models/response.js",
+        "js/content.js"
+      ],
+    "run_at": "document_start"
+    }
+  ],
+  "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'"
+}
