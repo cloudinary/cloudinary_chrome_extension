@@ -1,16 +1,30 @@
-function imageFilter(asset) {
-  if (asset.tabId<0){
+function imageFilter(details) {
+  if (details.tabId<0){
     return;
   }
-  var res = new Response(asset);
-  var tab = Cloudinary.getTab(asset.tabId);
-  if (res.isCloudinary()){
-    tab.addImage(res);
-    tab.notify(res);
-  }
+  var tab = Cloudinary.getTab(details.tabId);
+  var res = Image.fromDetails(details);
+  tab.addImage(res);
+  res.addListener('headers-loaded',function(data,sender){
+    if (res.isCloudinary()){
+      tab.notify(res);
+    }
+  })
 }
 
+
 chrome.webRequest.onResponseStarted.addListener( imageFilter, { urls: ['http://*/*', 'https://*/*'], types: ['image'] }, ['responseHeaders']);
+chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
+  switch (message.type) {
+    case 'current::method':
+      var current = Cloudinary.getCurrent();
+      current[message.method].apply(current,message.args)
+      break;
+    
+    default:
+      
+  }
+});
 
 
 chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {

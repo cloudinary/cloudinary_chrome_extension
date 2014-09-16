@@ -10,27 +10,27 @@ function preload(){
 
 function init(){
   var counter = document.getElementById('counter');
-  counter.innerHTML= tab.errors.length;
-  if (tab.errors==0){
-    counter.setAttribute('class','no-errors')
-  }else{
-    counter.setAttribute('class','errors-found')
-  }
   var errorsHTML = ""
-  console.log(tab.errors.length)
-  for (var i = 0, l =tab.errors.length; i < l; i ++) {
-    var err = tab.errors[i];
+  console.log(tab.errors().length)
+  for (var i = 0, l =tab.errors().length; i < l; i ++) {
+    var err = tab.errors()[i];
     console.log(err)
     errorsHTML+=errorTemplate(err,i);
   }
+  chrome.tabs.sendMessage(tab.tabId, {type: "highlight_errors"});
   console.log(errorsHTML)
   document.getElementById('errors-container').innerHTML = errorsHTML;
 }
 
 function errorTemplate(error,index){
-  var url = error.asset.url;
-  var html =''
-  html = '<li>'+error.errorMessage+'</li>'
+  var url = error.url;
+  var html ='<table border="1"><tr>'
+  var filename = url.substring(url.lastIndexOf('/')+1);
+  
+  html+= '<td><img src="'+url+'" width="30" height="30" alt="'+filename+'"/></td>'
+  html+= '<td style="font-weight:bold">'+filename+'</td>'
+  html+= '<td style="color:red">'+error.errorMessage()+'</td>'
+  html += '</tr></table'
   return html;
 }
 window.addEventListener("DOMContentLoaded", preload, false);

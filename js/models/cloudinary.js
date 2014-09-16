@@ -1,15 +1,27 @@
 var Cloudinary = function(tabId){
   this.tabId = tabId
+  this.executionContext = 'background'
   this.reset();
 };
+
 
 Cloudinary.prototype.reset = function(size){
   this.images = new Array(); 
   this.clearBadge();
 }
 
+Cloudinary.prototype.sync = function (method,originArgs){
+  if (this.executionContext == 'content') {
+    var args = [];
+    if (originArgs.length>0){
+      Array.prototype.push.apply( args, originArgs );
+    }
+    chrome.runtime.sendMessage({type:'current::method',method:method,args:args})
+  }
+}
+
 Cloudinary.prototype.badge = function(text,color){
-  if (!chrome.browserAction){ return; }
+  this.sync('badge',arguments)
   if (!this.isActive()){
     return;
   }
@@ -26,7 +38,7 @@ Cloudinary.prototype.clearBadge = function(){
 
 Cloudinary.prototype.notify= function(res){
   if (res && res.containsErrors()){
-    this.log(res.errorMessage,res.asset);
+    this.log(res.errorMessage(),res.asset);
   }
   
   if (this.hasErrors()){
@@ -48,6 +60,10 @@ Cloudinary.prototype.cloudinaries = function(){
   return this.images.filter(function(image){ return image.isCloudinary()});
 }
 Cloudinary.prototype.addImage= function(res){
+  if (!(res instanceof Image)){
+    res = Image.fromJSON(res);
+  }
+  this.sync('addImage',arguments)
   this.images.push(res);
 }
 
@@ -75,10 +91,8 @@ Cloudinary.getTab = function(tabId){
     throw new Error("tab id can't be lower then 0")
   }
   if (!Cloudinary.tabs[tabId]){
-    //console.log('initializing new context for '+tabId)
     Cloudinary.tabs[tabId] = new Cloudinary(tabId);
   }
-  //console.log('context at '+tabId)
   return Cloudinary.tabs[tabId];
 }
 
@@ -109,7 +123,7 @@ Cloudinary.fromJSON = function(data){
   c.images= [];
   for (var i = 0, l = data.images.length; i < l; i ++) {
     var v = data.images[i];
-    c.images.push(new Response(v.asset))
+    c.images.push(Image.fromJSON(v))
   }
   return c;
 }
