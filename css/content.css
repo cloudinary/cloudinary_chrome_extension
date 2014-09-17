@@ -1,0 +1,52 @@
+/* CSS RESET for CLOUDINARY element and sub elements */
+#CLOUDINARY {
+  font: 11px/14px Arial, Helvetica, sans-serif;
+  background: white;
+  clear: both;
+  -webkit-text-size-adjust: 100%;
+  -ms-text-size-adjust: none;
+}
+#CLOUDINARY html, #CLOUDINARY body, #CLOUDINARY div, #CLOUDINARY span, #CLOUDINARY applet, #CLOUDINARY object, #CLOUDINARY iframe,
+#CLOUDINARY h1, #CLOUDINARY h2, #CLOUDINARY h3, #CLOUDINARY h4, #CLOUDINARY h5, #CLOUDINARY h6, #CLOUDINARY p, #CLOUDINARY blockquote, #CLOUDINARY pre,
+#CLOUDINARY a, #CLOUDINARY abbr, #CLOUDINARY acronym, #CLOUDINARY address, #CLOUDINARY big, #CLOUDINARY cite, #CLOUDINARY code,
+#CLOUDINARY del, #CLOUDINARY dfn, #CLOUDINARY em, #CLOUDINARY img, #CLOUDINARY ins, #CLOUDINARY kbd, #CLOUDINARY q, #CLOUDINARY s, #CLOUDINARY samp,
+#CLOUDINARY small, #CLOUDINARY strike, #CLOUDINARY strong, #CLOUDINARY sub, #CLOUDINARY sup, #CLOUDINARY tt, #CLOUDINARY var,
+#CLOUDINARY b, #CLOUDINARY u, #CLOUDINARY i, #CLOUDINARY center,
+#CLOUDINARY dl, #CLOUDINARY dt, #CLOUDINARY dd, #CLOUDINARY ol, #CLOUDINARY ul, #CLOUDINARY li,
+#CLOUDINARY fieldset, #CLOUDINARY form, #CLOUDINARY label, #CLOUDINARY legend,
+#CLOUDINARY table, #CLOUDINARY caption, #CLOUDINARY tbody, #CLOUDINARY tfoot, #CLOUDINARY thead, #CLOUDINARY tr, #CLOUDINARY th, #CLOUDINARY td,
+#CLOUDINARY article, #CLOUDINARY aside, #CLOUDINARY canvas, #CLOUDINARY details, #CLOUDINARY embed,
+#CLOUDINARY figure, #CLOUDINARY figcaption, #CLOUDINARY footer, #CLOUDINARY header, #CLOUDINARY hgroup,
+#CLOUDINARY menu, #CLOUDINARY nav, #CLOUDINARY output, #CLOUDINARY ruby, #CLOUDINARY section, #CLOUDINARY summary,
+#CLOUDINARY time, #CLOUDINARY mark, #CLOUDINARY audio, #CLOUDINARY video {
+  margin: 0px 0px 0px 0px;
+  padding: 0px 0px 0px 0px;
+  border-width: 0px;
+  font: 100% "Trebuchet MS", Arial, Helvetica, sans-serif;
+  vertical-align: top;
+  text-align: left;
+  color: #4b4b4b;
+  line-height: 100%;
+  display: block;
+  clear: none;
+}
+
+/* END CSS RESET */
+#CLOUDINARY{
+}
+
+#CLOUDINARY .image-info-container{
+    position:absolute;
+    display:block;
+    border:1px solid transparent;
+    border-radius:2px;
+
+    -webkit-animation-name: CLOUDINARY-err-blink ;
+    -webkit-animation-duration: 5s ;
+    -webkit-animation-timing-function: ease-in-out ;
+    -webkit-animation-iteration-count: infinite;
+    -webkit-animation-direction: alternate ;
+}
+@-webkit-keyframes CLOUDINARY-err-blink { 
+   50% { border-color: #ff0000; } 
+}

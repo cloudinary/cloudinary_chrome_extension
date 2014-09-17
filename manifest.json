@@ -32,6 +32,9 @@
       "matches": [
         "*://*/*"
       ],
+      "css":[
+        "css/content.css"
+      ],
       "js": [
         "js/models/cloudinary.js",
         "js/models/image.js",

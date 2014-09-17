@@ -24,13 +24,13 @@ function init(){
 
 function errorTemplate(error,index){
   var url = error.url;
-  var html ='<table border="1"><tr>'
+  var html =''
   var filename = url.substring(url.lastIndexOf('/')+1);
   
-  html+= '<td><img src="'+url+'" width="30" height="30" alt="'+filename+'"/></td>'
-  html+= '<td style="font-weight:bold">'+filename+'</td>'
-  html+= '<td style="color:red">'+error.errorMessage()+'</td>'
-  html += '</tr></table'
+  html+= '<div class="err-img"><img src="'+url+'" width="24" height="24" alt="'+filename+'"/></div>'
+  html+= '<div class="err-filename">'+filename+'</div>'
+  html+= '<div class="err-msg">'+error.errorMessage()+'</div>'
+  html += '<div class="err-delimiter"></div>'
   return html;
 }
 window.addEventListener("DOMContentLoaded", preload, false);

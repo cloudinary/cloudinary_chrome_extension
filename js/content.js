@@ -24,76 +24,53 @@
   function init(stage){
     stages.push(stage)
     if (stages.length>=2){
-      setupMarkerElement();
-      //var elements = document.getElementsByTagName('img');
-      //for (var i = 0, l = elements.length; i < l; i ++) {
-        //var element = elements[i];
-        //var res = Image.fromElement(element);
-        //var cldnry = document.createElement("div");
-        //cldnry.style.width = '20px'
-        //cldnry.style.height= '20px'
-        //cldnry.style.backgroundColor= 'red'
-        //cldnry.style.backgroundColor= 'red'
-        //cldnry.style.top= '-20px'
-        //cldnry.style.left= '-20px'
-        //cldnry.style.marginLeft= '-20px'
-        //cldnry.style.marginBottom= '-20px'
-
-        //element.parentNode.insertBefore(cldnry,element.nextSibling);
-        
-        //res.addListener('headers-loaded',function(data,sender){
-          //tab.addImage(sender);
-          //if (sender.isCloudinary()){
-            //tab.notify(sender);
-            //if (sender.containsErrors()){
-              //logError(sender.url,sender.errorMessage());
-            //}
-          //}
-        //})
-      //}
+      augmentHostPage();
+      //itterateOverPageImages();
     }
   }
-  function setupMarkerElement(){
-    if (!document.getElementById('CLOUDINARY_HIGHLIGHTS')){
+
+  function augmentHostPage(){
+    if (!document.getElementById('CLOUDINARY')){
       var body = document.getElementsByTagName('body')[0];
       var div = document.createElement('div');
-      div.id = 'CLOUDINARY_HIGHLIGHTS'
+      div.id = 'CLOUDINARY'
+      div.setAttribute("id","CLOUDINARY")
+      div.setAttribute("class","CLOUDINARY")
       body.insertBefore(div,body.childNodes[0]);
     }
   }
 
   function highlightErrorsOnPage(){
-
-    document.getElementById('CLOUDINARY_HIGHLIGHTS').innerHTML = "";
+    var container = document.getElementById('CLOUDINARY')
+    container.innerHTML = "";
+    console.log('creating elements')
     for (var i=0;i<tab.errors().length;i++){
       error = tab.errors()[i]
       var elements = document.querySelectorAll('[src="'+error.url+'"]');
-      highlightErrorOnelements(elements,error);
-    }
-    var highlights = document.querySelectorAll('.clodinary.err');
-    for (var i=0;i<highlights.length;i++){
-      highlights[i].style.border='1px solid red'
+      highlightErrorOnelements(elements,error,container);
     }
   }
 
-  function highlightErrorOnelements(elements,error){
-    var template='<div style="width:#{w}px;height:#{h}px;top:#{t}px;left:#{l}px;display:block;position:absolute;border:0px solid white;transition: border-color 2s linear;" class="clodinary err"></div>'
-    var highlights = '';
+  function highlightErrorOnelements(elements,error,container){
+    var styleTemplate = "width:#{w}px;height:#{h}px;top:#{t}px;left:#{l}px;"
     for (var i = 0, l = elements.length; i < l; i ++) {
       var elm = elements[i];
-      highlights += template.replace('#{w}',elm.offsetWidth)
-                              .replace('#{h}',elm.offsetHeight)
-                              .replace('#{t}',elm.offsetTop)
-                              .replace('#{l}',elm.offsetLeft)
+
+      var highlight = document.createElement('div');
+      highlight.setAttribute('class','image-info-container');
+      highlight.setAttribute('style', styleTemplate.replace('#{w}',elm.offsetWidth)
+                             .replace('#{h}',elm.offsetHeight)
+                             .replace('#{t}',elm.offsetTop)
+                             .replace('#{l}',elm.offsetLeft));
+                             container.insertBefore(highlight,container.childNodes[0]);
     }
-    document.getElementById('CLOUDINARY_HIGHLIGHTS').innerHTML += highlights;
   }
 
   function logError(url,message,element){
     console.group("%cCloudinary X-Cld-Error","color:red ;background-color:yellow")
     console.log(message)
     if (element){
-        console.log("%o",element)
+      console.log("%o",element)
     }else{
       var elements = document.querySelectorAll('[src="'+url+'"]');
       for (var i = 0, l = elements.length; i < l; i ++) {
@@ -105,6 +82,23 @@
       }
     }
     console.groupEnd();
+  }
+
+  function itterateOverPageImages(){
+    var elements = document.getElementsByTagName('img');
+    for (var i = 0, l = elements.length; i < l; i ++) {
+      var res = Image.fromElement(element);
+
+      res.addListener('headers-loaded',function(data,sender){
+        tab.addImage(sender);
+        if (sender.isCloudinary()){
+          tab.notify(sender);
+          if (sender.containsErrors()){
+            logError(sender.url,sender.errorMessage());
+          }
+        }
+      })
+    }
   }
 
 })(this);

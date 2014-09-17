@@ -1,6 +1,6 @@
 body
 {
-  min-width: 450px;
+  min-width: 550px;
   margin: 0px;
   font-family: Segoe UI, Arial, sans-serif;
   font-size: 13px;
@@ -73,16 +73,32 @@ header
   text-align:center;
   border-radius:1px;
 }
-ul
-{
+
+
+.err-img,.err-filename,.err-msg{
+  float:left;
+  height:24px;
+  overflow:hidden;
+  text-overflow: ellipsis;
+  margin-left:4px;
+}
+.err-img{
+  width:25px;
+}
+.err-filename{
+  width:144px;
+  font-weight:bold;
+}
+.err-msg{
+  width:354px;
+  font-size:80%;
 }
 
-li
-{
-  padding:3px;
-  /*list-style-type: none;*/
-  max-width:300px;
-  overflow:none;
-  white-space: nowrap;
-|
-
+.err-delimiter{
+  clear:both;
+  padding-top:5px;
+  margin-bottom:5px;
+  border-bottom:1px solid #e1ddd8;
+  margin-left:5px;
+  margin-right:5px;
+}
