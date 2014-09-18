@@ -42,7 +42,7 @@ Image.prototype.parseResponseHeaders= function(responseHeaders){
     var v = responseHeaders[i];
     this.responseHeaders[v.name]= v.value;
   }
-  if (this.getHeader('Content-Length')==null){
+  if (this.getHeader('Server')==null){
     this.reloadHeaders();
   } else { 
     var self = this;
