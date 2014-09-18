@@ -111,7 +111,7 @@ Image.prototype.statusCode= function(format){
 }
 
 Image.prototype.getSize = function(format){
-  var bytes = this.getHeader('Content-Length');
+  var bytes = this.getHeader('Content-Length') || 0;
   var size = bytes;
   var unit = 'bytes'
   if (size>1024){
