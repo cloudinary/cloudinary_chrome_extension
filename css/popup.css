@@ -1,12 +1,13 @@
 body
 {
-  min-width: 550px;
+  min-width: 350px;
   margin: 0px;
   font-family: Segoe UI, Arial, sans-serif;
   font-size: 13px;
   color: #545454;
   background-color: #f8f6f2;
   background-image:-webkit-gradient(linear, 0% 100%, 0% 0%, color-stop(0.33, rgb(245, 248, 249)), color-stop(0.67, rgb(253, 253, 254)));
+  padding:10px;
 }
 
 #clickhide-instructions,
@@ -101,4 +102,32 @@ header
   border-bottom:1px solid #e1ddd8;
   margin-left:5px;
   margin-right:5px;
+}
+
+.stat{
+  margin-bottom:10px;
+}
+
+.myButton {
+	-moz-box-shadow:inset 0px 34px 0px -15px #b54b3a;
+	-webkit-box-shadow:inset 0px 34px 0px -15px #b54b3a;
+	box-shadow:inset 0px 34px 0px -15px #b54b3a;
+	background-color:#a73f2d;
+	border:1px solid #545454;;
+	display:inline-block;
+	cursor:pointer;
+	color:#ffffff;
+	font-family:arial;
+	font-size:15px;
+	font-weight:bold;
+	padding:9px 23px;
+	text-decoration:none;
+	text-shadow:0px -1px 0px #7a2a1d;
+}
+.myButton:hover {
+	background-color:#b34332;
+}
+.myButton:active {
+	position:relative;
+	top:1px;
 }

@@ -19,7 +19,8 @@
     "activeTab",
     "webRequest",
     "webRequestBlocking",
-    "\u003Call_urls>"
+    "\u003Call_urls>",
+    "storage"
   ],
   "browser_action": {
     "default_title": "Cloudinary",
@@ -43,5 +44,6 @@
     "run_at": "document_start"
     }
   ],
+  "options_page": "html/options.html",
   "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'"
 }

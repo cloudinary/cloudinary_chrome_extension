@@ -1,7 +1,10 @@
+
+
+var pluginEnabled=true;
 function imageFilter(details) {
-  if (details.tabId<0){
-    return;
-  }
+  if (!pluginEnabled) { return; }
+  if (details.tabId<0){ return; }
+
   var tab = Cloudinary.getTab(details.tabId);
   var res = Image.fromDetails(details);
   tab.addImage(res);
@@ -11,6 +14,7 @@ function imageFilter(details) {
     }
   })
 }
+
 
 
 chrome.webRequest.onResponseStarted.addListener( imageFilter, { urls: ['http://*/*', 'https://*/*'], types: ['image'] }, ['responseHeaders']);

@@ -3,22 +3,35 @@ var Cloudinary,tab;
 function preload(){
   chrome.runtime.getBackgroundPage(function(backgroundPage){
     Cloudinary = backgroundPage.Cloudinary;
-    tab = Cloudinary.getCurrent();
-    init();
+    try{
+      tab = Cloudinary.getCurrent()
+      init();
+    }catch(e){
+      console.log(e)
+    }
   })
 }
 
 function init(){
   var counter = document.getElementById('counter');
+  document.getElementById("showOnPage").addEventListener('click',function(e){
+    chrome.tabs.sendMessage(tab.tabId, {type: "highlight_errors"});
+  });
   var errorsHTML = ""
-  console.log(tab.errors().length)
   for (var i = 0, l =tab.errors().length; i < l; i ++) {
-    var err = tab.errors()[i];
-    console.log(err)
+    var err = tab.errors(i);
     errorsHTML+=errorTemplate(err,i);
   }
-  chrome.tabs.sendMessage(tab.tabId, {type: "highlight_errors"});
-  console.log(errorsHTML)
+
+  var total = 0;
+  tab.images().forEach(function(image){
+    total += image.getSize().bytes*1;
+  })
+
+  document.getElementById("imageCount").innerHTML = tab.images().length
+  document.getElementById("totalSize").innerHTML = (total/1024).toFixed(2) + " kb";
+  document.getElementById("cloudinaryCount").innerHTML = tab.cloudinaries().length
+  document.getElementById("errorCount").innerHTML = tab.errors().length
   document.getElementById('errors-container').innerHTML = errorsHTML;
 }
 
@@ -33,5 +46,5 @@ function errorTemplate(error,index){
   html += '<div class="err-delimiter"></div>'
   return html;
 }
-window.addEventListener("DOMContentLoaded", preload, false);
 
+window.addEventListener("DOMContentLoaded", preload, false);

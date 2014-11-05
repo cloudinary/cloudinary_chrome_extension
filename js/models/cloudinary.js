@@ -6,7 +6,7 @@ var Cloudinary = function(tabId){
 
 
 Cloudinary.prototype.reset = function(size){
-  this.images = new Array(); 
+  this._images = new Array(); 
   this.clearBadge();
 }
 
@@ -49,22 +49,44 @@ Cloudinary.prototype.notify= function(res){
 }
 
 
-Cloudinary.prototype.errors = function(){
-  return this.images.filter(function(image){ return image.containsErrors()});
+Cloudinary.prototype.images = function(index){
+  var allImages= this._images;
+  if (isFinite(index)){
+    return allImages[index];
+  } else if (typeof(index)=="string") {
+    var results = allImages.filter(function(image){ return image.hash()==index});
+    if (results!=null){
+      return results[0];
+    }
+    return results;
+  }
+  return allImages;
+}
+
+Cloudinary.prototype.errors = function(index){
+  var allErrors= this._images.filter(function(image){ return image.containsErrors()});
+  if (isFinite(index)){
+    return allErrors[index];
+  }
+  return allErrors;
 }
 
 Cloudinary.prototype.hasErrors = function(){
   return this.errors().length>0;
 }
-Cloudinary.prototype.cloudinaries = function(){
-  return this.images.filter(function(image){ return image.isCloudinary()});
+Cloudinary.prototype.cloudinaries = function(index){
+  var allCloudinaries= this._images.filter(function(image){ return image.isCloudinary()});
+  if (index){
+    return allCloudinaries[index];
+  }
+  return allCloudinaries;
 }
 Cloudinary.prototype.addImage= function(res){
   if (!(res instanceof Image)){
     res = Image.fromJSON(res);
   }
   this.sync('addImage',arguments)
-  this.images.push(res);
+  this._images.push(res);
 }
 
 Cloudinary.prototype.log = function(message,asset){
@@ -105,7 +127,6 @@ Cloudinary.hasTab = function(tabId){
 Cloudinary.setCurrent= function(tabId){
   Cloudinary.activeTabId = tabId;
   return Cloudinary.getTab(tabId)
-  
 }
 
 Cloudinary.getCurrent = function(){
@@ -115,15 +136,36 @@ Cloudinary.getCurrent = function(){
   return Cloudinary.getTab(Cloudinary.activeTabId);
 }
 
+Cloudinary.defaults = {
+  overlay:{
+    overlay_enabled:true,
+    overlay_image_metadata:true,
+    overlay_cloudinary_metadata:true,
+    overlay_cloudinary_errors:true
+  }
+}
+
+Cloudinary.updatePluginIcon = function(pluginEnabled){
+  console.log('updatePluginIcon',pluginEnabled)
+  if (pluginEnabled){
+    chrome.browserAction.setBadgeText({text: 'true'});
+    chrome.browserAction.setIcon({path: "/icons/icon19.png"});
+  }else{
+    chrome.browserAction.setIcon({path: chrome.extension.getURL("/icons/iconbw19.png")});
+    chrome.browserAction.setBadgeText({text: 'false'});
+  }
+}
+
+
 Cloudinary.fromJSON = function(data){
   var c = new Cloudinary(1);
   for (var attr in data) {
     c[attr]= data[attr];
   }
-  c.images= [];
-  for (var i = 0, l = data.images.length; i < l; i ++) {
-    var v = data.images[i];
-    c.images.push(Image.fromJSON(v))
+  c._images= [];
+  for (var i = 0, l = data._images.length; i < l; i ++) {
+    var v = data._images[i];
+    c._images.push(Image.fromJSON(v))
   }
   return c;
 }
