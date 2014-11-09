@@ -29,7 +29,7 @@
   },
   "content_scripts": [
     {
-    "all_frames": false,
+    "all_frames": true,
       "matches": [
         "*://*/*"
       ],
