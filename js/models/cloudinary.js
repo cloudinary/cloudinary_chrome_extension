@@ -138,7 +138,6 @@ Cloudinary.getCurrent = function(){
 
 Cloudinary.defaults = {
   overlay:{
-    overlay_enabled:true,
     overlay_image_metadata:true,
     overlay_cloudinary_metadata:true,
     overlay_cloudinary_errors:true

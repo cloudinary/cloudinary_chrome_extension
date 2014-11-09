@@ -8,15 +8,6 @@ function loadOptions() {
 
 window.onload = function(){
   loadOptions();
-  document.getElementById('overlay_enabled').addEventListener('click',function(){
-    var enabled = document.getElementById('overlay_enabled').checked
-    for (var attr in Cloudinary.defaults.overlay){
-      if (attr!='overlay_enabled'){
-        document.getElementById(attr).disabled=!enabled;
-      }
-    }
-  })
-
   for (var attr in Cloudinary.defaults.overlay){
     document.getElementById(attr).addEventListener('click',function(event){
       var data = {}
