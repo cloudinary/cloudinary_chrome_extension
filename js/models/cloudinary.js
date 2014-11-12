@@ -1,5 +1,7 @@
 var Cloudinary = function(tabId){
   this.tabId = tabId
+  this.imagesReportedToContent = -1;
+  this.highlightElements=false;
   this.executionContext = 'background'
   this.reset();
 };
@@ -7,10 +9,11 @@ var Cloudinary = function(tabId){
 
 Cloudinary.prototype.reset = function(size){
   this._images = new Array(); 
+  this._cached_images= new Array(); 
   this.clearBadge();
 }
 
-Cloudinary.prototype.sync = function (method,originArgs){
+Cloudinary.prototype.syncBackground= function (method,originArgs){
   if (this.executionContext == 'content') {
     var args = [];
     if (originArgs.length>0){
@@ -20,8 +23,17 @@ Cloudinary.prototype.sync = function (method,originArgs){
   }
 }
 
+Cloudinary.prototype.syncContent= function (method,originArgs){
+  if (this.executionContext == 'background') {
+    var args = [];
+    if (originArgs.length>0){
+      Array.prototype.push.apply( args, originArgs );
+    }
+    chrome.tabs.sendMessage(this.tabId, {type:'current::method',method:method,args:args});
+  }
+}
 Cloudinary.prototype.badge = function(text,color){
-  this.sync('badge',arguments)
+  this.syncBackground('badge',arguments)
   if (!this.isActive()){
     return;
   }
@@ -32,13 +44,14 @@ Cloudinary.prototype.badge = function(text,color){
   }
 };
 
+
 Cloudinary.prototype.clearBadge = function(){
   this.badge('')
 }
 
 Cloudinary.prototype.notify= function(res){
   if (res && res.containsErrors()){
-    this.log(res.errorMessage(),res.asset);
+    this.log(res.errorMessage(),res.url);
   }
   
   if (this.hasErrors()){
@@ -48,6 +61,17 @@ Cloudinary.prototype.notify= function(res){
   }
 }
 
+Cloudinary.prototype.find =function(match){
+  return this._images.filter(function(image){
+    if (image==null){ return false; }
+    if (image.url.indexOf(match)>-1) { return true ;}
+    for (var key in image.responseHeaders){
+      var header = image.responseHeaders[key] ;
+      if (typeof(header)=='string' && header.indexOf(match)>-1) { return true ;}
+    }
+    return false;
+  })
+}
 
 Cloudinary.prototype.images = function(index){
   var allImages= this._images;
@@ -74,6 +98,7 @@ Cloudinary.prototype.errors = function(index){
 Cloudinary.prototype.hasErrors = function(){
   return this.errors().length>0;
 }
+
 Cloudinary.prototype.cloudinaries = function(index){
   var allCloudinaries= this._images.filter(function(image){ return image.isCloudinary()});
   if (index){
@@ -81,17 +106,54 @@ Cloudinary.prototype.cloudinaries = function(index){
   }
   return allCloudinaries;
 }
+
+Cloudinary.prototype.cached= function(index){
+  return this._cached_images;
+}
+
+Cloudinary.prototype.preloadCachedImagesHeaders = function(){
+  var tab= this;
+  this.cached().forEach(function(url){
+    if (tab.find(url).length==0) {
+      var img = Image.fromUrl(url);
+      img.addListener('headers-loaded',function(e){
+        tab.addImage(img) ;
+        tab.notify(img);
+      })
+    }
+  });
+}
+Cloudinary.prototype.addCachedImage = function(url){
+  this._cached_images.push(url)
+  this.syncBackground('addCachedImage',arguments)
+}
 Cloudinary.prototype.addImage= function(res){
   if (!(res instanceof Image)){
     res = Image.fromJSON(res);
   }
-  this.sync('addImage',arguments)
+  this.syncBackground('addImage',arguments)
   this._images.push(res);
 }
 
-Cloudinary.prototype.log = function(message,asset){
+Cloudinary.prototype.getHighlightStatus = function(){
+  return this.highlightElements;
+}
+Cloudinary.prototype.toggleElementsHighlight = function(status){
+  if (status!=null){
+    this.highlightElements =status;
+  }else{
+    this.highlightElements =!this.highlightElements;
+  }
+  if (this.executionContext=='content'){
+    Content.toggleHighlight(this.highlightElements)
+  }else{
+    this.syncContent('toggleElementsHighlight',arguments)
+  }
+}
+
+Cloudinary.prototype.log = function(message,url){
   if (!chrome.tabs){ return; }
-  var request = {type: "log",message:message,asset:asset}
+  var request = {type: "log",message:message,url:url}
   console.log('log: request' ,this.tabId, request);
   chrome.tabs.sendMessage(this.tabId,request, function(response) {
     console.log('log: response' ,response);
@@ -101,13 +163,28 @@ Cloudinary.prototype.log = function(message,asset){
 Cloudinary.prototype.isActive = function(){
   return Cloudinary.activeTabId==this.tabId;
 }
+
+Cloudinary.updateContentScripts = function(){
+  for (var id in Cloudinary.tabs){
+    var tab = Cloudinary.tabs[id]
+    if (tab){
+      tab.updateContentScript();
+    }
+  }
+}
 Cloudinary.prototype.updateContentScript = function(){
-  if (!chrome.tabs){ return ;} 
+  if (this.executionContext!='background') { return ;}
+  if (this.imagesReportedToContent==this._images.length){ return; }
+  this.imagesReportedToContent = this._images.length;
   var request = {type:'data',data:this};
-  chrome.tabs.sendMessage(this.tabId,request, function(response) {
-  });
+  chrome.tabs.sendMessage(this.tabId,request, function(response) {});
 }
 
+Cloudinary.prototype.notifyLoadComplete= function(){
+  if (this.executionContext!='background') { return ;}
+  var request = {type:'tabLoaded'};
+  chrome.tabs.sendMessage(this.tabId,request, function(response) {});
+}
 Cloudinary.getTab = function(tabId){
   if (tabId<0){
     throw new Error("tab id can't be lower then 0")

@@ -1,76 +1,105 @@
-/* CSS RESET for CLOUDINARY element and sub elements */
-#CLOUDINARY {
+/* CSS RESET for CLOUDINARY_INFO element and sub elements */
+#CLOUDINARY_INFO {
   font: 11px/14px Arial, Helvetica, sans-serif;
-  background: white;
   clear: both;
   -webkit-text-size-adjust: 100%;
   -ms-text-size-adjust: none;
 }
-#CLOUDINARY html, #CLOUDINARY body, #CLOUDINARY div, #CLOUDINARY span, #CLOUDINARY applet, #CLOUDINARY object, #CLOUDINARY iframe,
-#CLOUDINARY h1, #CLOUDINARY h2, #CLOUDINARY h3, #CLOUDINARY h4, #CLOUDINARY h5, #CLOUDINARY h6, #CLOUDINARY p, #CLOUDINARY blockquote, #CLOUDINARY pre,
-#CLOUDINARY a, #CLOUDINARY abbr, #CLOUDINARY acronym, #CLOUDINARY address, #CLOUDINARY big, #CLOUDINARY cite, #CLOUDINARY code,
-#CLOUDINARY del, #CLOUDINARY dfn, #CLOUDINARY em, #CLOUDINARY img, #CLOUDINARY ins, #CLOUDINARY kbd, #CLOUDINARY q, #CLOUDINARY s, #CLOUDINARY samp,
-#CLOUDINARY small, #CLOUDINARY strike, #CLOUDINARY strong, #CLOUDINARY sub, #CLOUDINARY sup, #CLOUDINARY tt, #CLOUDINARY var,
-#CLOUDINARY b, #CLOUDINARY u, #CLOUDINARY i, #CLOUDINARY center,
-#CLOUDINARY dl, #CLOUDINARY dt, #CLOUDINARY dd, #CLOUDINARY ol, #CLOUDINARY ul, #CLOUDINARY li,
-#CLOUDINARY fieldset, #CLOUDINARY form, #CLOUDINARY label, #CLOUDINARY legend,
-#CLOUDINARY table, #CLOUDINARY caption, #CLOUDINARY tbody, #CLOUDINARY tfoot, #CLOUDINARY thead, #CLOUDINARY tr, #CLOUDINARY th, #CLOUDINARY td,
-#CLOUDINARY article, #CLOUDINARY aside, #CLOUDINARY canvas, #CLOUDINARY details, #CLOUDINARY embed,
-#CLOUDINARY figure, #CLOUDINARY figcaption, #CLOUDINARY footer, #CLOUDINARY header, #CLOUDINARY hgroup,
-#CLOUDINARY menu, #CLOUDINARY nav, #CLOUDINARY output, #CLOUDINARY ruby, #CLOUDINARY section, #CLOUDINARY summary,
-#CLOUDINARY time, #CLOUDINARY mark, #CLOUDINARY audio, #CLOUDINARY video {
+#CLOUDINARY_INFO html, #CLOUDINARY_INFO body, #CLOUDINARY_INFO div, #CLOUDINARY_INFO span, #CLOUDINARY_INFO applet, #CLOUDINARY_INFO object, #CLOUDINARY_INFO iframe,
+#CLOUDINARY_INFO h1, #CLOUDINARY_INFO h2, #CLOUDINARY_INFO h3, #CLOUDINARY_INFO h4, #CLOUDINARY_INFO h5, #CLOUDINARY_INFO h6, #CLOUDINARY_INFO p, #CLOUDINARY_INFO blockquote, #CLOUDINARY_INFO pre,
+#CLOUDINARY_INFO a, #CLOUDINARY_INFO abbr, #CLOUDINARY_INFO acronym, #CLOUDINARY_INFO address, #CLOUDINARY_INFO big, #CLOUDINARY_INFO cite, #CLOUDINARY_INFO code,
+#CLOUDINARY_INFO del, #CLOUDINARY_INFO dfn, #CLOUDINARY_INFO em, #CLOUDINARY_INFO img, #CLOUDINARY_INFO ins, #CLOUDINARY_INFO kbd, #CLOUDINARY_INFO q, #CLOUDINARY_INFO s, #CLOUDINARY_INFO samp,
+#CLOUDINARY_INFO small, #CLOUDINARY_INFO strike, #CLOUDINARY_INFO strong, #CLOUDINARY_INFO sub, #CLOUDINARY_INFO sup, #CLOUDINARY_INFO tt, #CLOUDINARY_INFO var,
+#CLOUDINARY_INFO b, #CLOUDINARY_INFO u, #CLOUDINARY_INFO i, #CLOUDINARY_INFO center,
+#CLOUDINARY_INFO dl, #CLOUDINARY_INFO dt, #CLOUDINARY_INFO dd, #CLOUDINARY_INFO ol, #CLOUDINARY_INFO ul, #CLOUDINARY_INFO li,
+#CLOUDINARY_INFO fieldset, #CLOUDINARY_INFO form, #CLOUDINARY_INFO label, #CLOUDINARY_INFO legend,
+#CLOUDINARY_INFO table, #CLOUDINARY_INFO caption, #CLOUDINARY_INFO tbody, #CLOUDINARY_INFO tfoot, #CLOUDINARY_INFO thead, #CLOUDINARY_INFO tr, #CLOUDINARY_INFO th, #CLOUDINARY_INFO td,
+#CLOUDINARY_INFO article, #CLOUDINARY_INFO aside, #CLOUDINARY_INFO canvas, #CLOUDINARY_INFO details, #CLOUDINARY_INFO embed,
+#CLOUDINARY_INFO figure, #CLOUDINARY_INFO figcaption, #CLOUDINARY_INFO footer, #CLOUDINARY_INFO header, #CLOUDINARY_INFO hgroup,
+#CLOUDINARY_INFO menu, #CLOUDINARY_INFO nav, #CLOUDINARY_INFO output, #CLOUDINARY_INFO ruby, #CLOUDINARY_INFO section, #CLOUDINARY_INFO summary,
+#CLOUDINARY_INFO time, #CLOUDINARY_INFO mark, #CLOUDINARY_INFO audio, #CLOUDINARY_INFO video {
   margin: 0px 0px 0px 0px;
   padding: 0px 0px 0px 0px;
   border-width: 0px;
-  font: 100% "Trebuchet MS", Arial, Helvetica, sans-serif;
+  font: 11px/14px Arial, Helvetica, sans-serif;
   vertical-align: top;
   text-align: left;
   color: #4b4b4b;
   line-height: 100%;
-  display: block;
   clear: none;
 }
+
 
 /* END CSS RESET */
 #CLOUDINARY{
 }
 #CLOUDINARY_INFO{
-    position:absolute;
-    border:1px solid transparent;
-    border-radius:2px;
-    z-index:999999999;
+    position:fixed;
+    right:40px;
     top:0px;
-    left:0px;
-    border-color:gray;
-    background-color:#fcffb6;
+    width:300px;
+    overflow-x:scroll;
+    overflow-y:scroll;
+    height:500px
+    border:1px solid #1070b9;
+    border-top:0px ;
+    border-radius:0px 0px 20px 20px;
+    z-index:999999999;
     padding:5px;
     font-size:12px;
     display:none;
+
+    background: #f0f9ff; /* Old browsers */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#f0f9ff), color-stop(47%,#cbebff), color-stop(100%,#a1dbff)); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top,  #f0f9ff 0%,#cbebff 47%,#a1dbff 100%); /* Chrome10+,Safari5.1+ */
+    background: linear-gradient(to bottom,  #f0f9ff 0%,#cbebff 47%,#a1dbff 100%); /* W3C */
+    
+}
+#CLOUDINARY_INFO .resourceLink{
+  white-space:nowrap;
+  overflow: hidden;
+  font-weight:bold;
+  text-overflow: ellipsis;
+  width: 100%;
+  display: block;
+  color:blue;
 }
 
-#CLOUDINARY_INFO h1{
-  font-size:13px;
-  float: left;
+#CLOUDINARY_INFO .error{
+  border:1px solid red;
+  border-radius:2px;
+  background-color:pink;
+  color:black;
+  padding:3px;
+  margin-top:3px;
+  margin-bottom:3px;
+  word-wrap:break-word;
 }
 
-#CLOUDINARY .image-info-container{
-    position:absolute;
-    display:block;
-    border:1px solid transparent;
-    border-radius:2px;
-    z-index:9999999;
-    border-color:green;
+
+.image-info-container{
+  position:absolute;
+  display:block;
+  border:1px solid transparent;
+  border-radius:2px;
+  /*z-index:9999999;*/
+  border-color:green;
 }
 
-#CLOUDINARY .image-cloudinary{
+.image-cloudinary{
   border-color:#1070b9;
   background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJ bWFnZVJlYWR5ccllPAAAAyRpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdp bj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6 eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMy1jMDExIDY2LjE0 NTY2MSwgMjAxMi8wMi8wNi0xNDo1NjoyNyAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJo dHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlw dGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAv IiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RS ZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpD cmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNiAoTWFjaW50b3NoKSIgeG1wTU06SW5zdGFu Y2VJRD0ieG1wLmlpZDo5QUVFMjIxODI1MzUxMUU0OERFQ0IxNDU3RjdGNzQ0MiIgeG1wTU06RG9j dW1lbnRJRD0ieG1wLmRpZDo5QUVFMjIxOTI1MzUxMUU0OERFQ0IxNDU3RjdGNzQ0MiI+IDx4bXBN TTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOjlBRUUyMjE2MjUzNTExRTQ4 REVDQjE0NTdGN0Y3NDQyIiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOjlBRUUyMjE3MjUzNTEx RTQ4REVDQjE0NTdGN0Y3NDQyIi8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4 bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+OUP0mwAAAx1JREFUeNqM01lsFVUYB/D/OXNnvUun xa7pwlWqtqS9GmWRJWJ8AeOLvkAkJrhG6oMYWx80+oJJfSA2wRqIvuCSQtQHQiCQ4IYNNVASAlgS iu2tNtBKby9tr3f2M8fvKk+kJp7klzmZc+abk5n/x9D3Pf4dkrA7c5jkDfIC8ckA+ZzEuGtwLD8a yWPkftJ1Z24vt3G5Au3kLMmQHtJH1pMT/7OA3EEnPQLuPwGhHyD7OIu7aWGKfEj0/ygQr4M0DiFu 2IS4fi9ubkFP8wje7vgM0mnIQrI8HPNFhNpFcDl4V4HgNcSNp1LSsHYaxw91svwGSLPu8YYreLBq CrLY+TAKdWeytYXOOs3fj0jZDR5/UvnqCjY+3w1pH2+C1vuN/eq7b1lfvNIV/JlKtfx+sm/DYL1T qHl00s+cWt1Smjj3zn6nRo8uHPt220XUz39ERU5TgZd6Ebcuvp/s30Nv78+Hq95sxOxDT1f/dDJh 2L0t8tbHuzqGvnzuSbkQyeSgVIKx0Ym287OuuRWGX+SQWhlwrtfyGUDgAT/WUZSZiNlWT8j4Lleo PPCa+spL6fdKUy2vr2mbHti7+yvA02/CMaY5Ev4Q1LD1A7//vlGZO9fGbkAKesZSx5HgofBcuNZK M9Bqt1vJeci5FR0nzqx5GVK5CoP9wFnw1zgP5gd+Q27bpPbIRjO9gOakY9iIVK3Gc9LVPqqSxbnq FWJcz0bw0mb78OTadpTFPhYUFhKZ74bAbt8YKd377OjPa9sms0btJenpobxsneWl4LptWp1+YekX dzHvId1wTSQKUc6+dHBs+I/FVM0oWFXX9pwM/GcU7g3fdjIjcOtdKBHFhVpgxmpK2kFrWSrTmCsX IcsumAoo3j1IJ9R0s1ZgmdzOr8H5FR6H2SBi3UJosxSUXyPEOhdsi/ATJldkXuHhEmJRBmPN1FKV a0lPYSJB0T1KCx0xlAuqKl1NCxQKSJ2ImcYN+SNPh0LGuEWZCyg2m2l/JXyHyVNxBJMKYIispIUZ KeFLySo9rVZ2ScEiISpn/qelK3c+ReVnU3TJAhn7W4ABAECuTXFF8nIyAAAAAElFTkSuQmCC");
   background-size: 16px 16px;
   background-repeat: no-repeat;
   background-position: bottom right;
 }
+.cloudinary-icon{
+  width:16px;
+  height:16px;
+  border:0px;
+}
 
-#CLOUDINARY .image-error{
+.image-error{
     -webkit-animation-name: CLOUDINARY-error-blink ;
     -webkit-animation-duration: 5s ;
     -webkit-animation-timing-function: ease-in-out ;
@@ -80,3 +109,5 @@
 @-webkit-keyframes CLOUDINARY-error-blink { 
    50% { border-color: #ff0000; } 
 }
+
+

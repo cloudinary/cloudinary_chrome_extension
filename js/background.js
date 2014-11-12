@@ -15,6 +15,9 @@ function imageFilter(details) {
   })
 }
 
+setInterval(function(){
+  Cloudinary.updateContentScripts();
+},3000);
 
 
 chrome.webRequest.onResponseStarted.addListener( imageFilter, { urls: ['http://*/*', 'https://*/*'], types: ['image'] }, ['responseHeaders']);
@@ -40,7 +43,9 @@ chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
       Cloudinary.getTab(tabId).reset();
     }
     if (changeInfo.status=="complete"){
-      Cloudinary.getTab(tabId).updateContentScript();
+      var tab = Cloudinary.getTab(tabId);
+      tab.updateContentScript();
+      tab.notifyLoadComplete();
     }
   }
 });

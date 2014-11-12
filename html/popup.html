@@ -10,11 +10,25 @@
       <div id="logo"></div>
     </header>
     <div id="errors-container"></div>
-    <div class="stat"><span class="metric" id="imageCount">39</span> images in page </div> 
-    <div class="stat"><span class="metric" id="totalSize">39</span> in total</div>
-    <div class="stat"><span class="metric" id="cloudinaryCount">39</span> Cloudinary images</div>
-    <div class="stat"><span class="metric" id="errorCount">39</span> errors</div>
-    <a href="#" id="showOnPage" class="myButton">Show on Page</a>
+    <div class="stat"><span class="metric" id="imageCount">{x}</span> Images in page </div> 
+    <div class="stat"><span class="metric" id="cacheCount">{x}</span> Cached</div>
+    <div class="stat"><span class="metric" id="cloudinaryCount">{x}</span> Cloudinary images</div>
+    <div class="stat"><span class="metric" id="errorCount">{x}</span> Errors</div>
+    <div class="stat"><span class="metric" id="totalSize">{x}</span> loaded in total</div>
+    <table>
+      <tr>
+        <td>
+          <div class="onoffswitch">
+            <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="toggleHighlight">
+            <label class="onoffswitch-label" for="toggleHighlight">
+              <span class="onoffswitch-inner"></span>
+              <span class="onoffswitch-switch"></span>
+            </label>
+          </div>
+        </td> 
+        <td style="color:#1070b9;font-weight:bold">Highlight Elements On Page</td>
+      </tr>
+    </table>
   </body>
 </html>
 

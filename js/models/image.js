@@ -1,6 +1,7 @@
 
 var Image = function(url){
   this.url = url;
+  this.cached=false;
   this.listeners = [];
 }
 
@@ -19,18 +20,13 @@ Image.prototype.fileName = function(){
 
 Image.fromDetails = function(details){
   var res = new Image(details.url);
-  //TODO: __details__ refference should be removed when stablelized
-  //res.__details__ = details;
   res.parseResponseHeaders(details.responseHeaders);
   return res;
 }
 
-Image.fromElement= function(image){
-  var res = new Image(image.src);
-  //TODO: __image__ refference should be removed when stablelized
-  //res.__image__= image;
+Image.fromUrl= function(url){
+  var res = new Image(url);
   res.parseResponseHeaders();
-  res.imageDimensions(image);
   return res;
 }
 
@@ -58,7 +54,9 @@ Image.prototype.parseResponseHeaders= function(responseHeaders){
   this.responseHeaders = {}
   for (var i = 0, l = responseHeaders.length; i < l; i ++) {
     var v = responseHeaders[i];
-    this.responseHeaders[v.name]= v.value;
+    if(v.name!=null && v.name!=''){
+      this.responseHeaders[v.name]= v.value;
+    }
   }
   if (this.getHeader('Server')==null){
     this.reloadHeaders();
@@ -86,7 +84,9 @@ Image.prototype.addXhrHeaders = function(xhr){
     allHeaders = allHeaders.split('\n');
     allHeaders = allHeaders.map(function(header){return header.split(/\: (.+)/)})
     allHeaders.forEach(function(header){
-      this.responseHeaders[header[0]] = header[1]
+      if(header[0]!=null && header[0]!=''){
+        this.responseHeaders[header[0]] = header[1]
+      }
     },this)
   }
   this.emit('headers-loaded')
@@ -115,7 +115,7 @@ Image.prototype.emit= function(event,data){
 }
 
 Image.prototype.getHeader= function(name){
-  return this.responseHeaders[name];
+  return this.responseHeaders && this.responseHeaders[name];
 }
 
 Image.prototype.statusCode= function(){

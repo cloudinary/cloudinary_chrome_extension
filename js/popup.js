@@ -1,22 +1,25 @@
 
 var Cloudinary,tab;
 function preload(){
+  
   chrome.runtime.getBackgroundPage(function(backgroundPage){
     Cloudinary = backgroundPage.Cloudinary;
     try{
       tab = Cloudinary.getCurrent()
-      init();
+      tab.preloadCachedImagesHeaders();
     }catch(e){
       console.log(e)
     }
+    init();
   })
 }
 
 function init(){
+  document.getElementById("toggleHighlight").addEventListener('change',function(e){
+    tab.toggleElementsHighlight(e.target.checked)
+  })
+  document.getElementById("toggleHighlight").checked = tab.getHighlightStatus();
   var counter = document.getElementById('counter');
-  document.getElementById("showOnPage").addEventListener('click',function(e){
-    chrome.tabs.sendMessage(tab.tabId, {type: "highlight_errors"});
-  });
   var errorsHTML = ""
   for (var i = 0, l =tab.errors().length; i < l; i ++) {
     var err = tab.errors(i);
@@ -32,6 +35,7 @@ function init(){
   document.getElementById("totalSize").innerHTML = (total/1024).toFixed(2) + " kb";
   document.getElementById("cloudinaryCount").innerHTML = tab.cloudinaries().length
   document.getElementById("errorCount").innerHTML = tab.errors().length
+  document.getElementById("cacheCount").innerHTML = tab.cached().length
   document.getElementById('errors-container').innerHTML = errorsHTML;
 }
 
