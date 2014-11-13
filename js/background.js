@@ -1,8 +1,4 @@
-
-
-var pluginEnabled=true;
 function imageFilter(details) {
-  if (!pluginEnabled) { return; }
   if (details.tabId<0){ return; }
 
   var tab = Cloudinary.getTab(details.tabId);
@@ -12,10 +8,6 @@ function imageFilter(details) {
     tab.notify(res);
   })
 }
-
-setInterval(function(){
-  Cloudinary.updateContentScripts();
-},3000);
 
 
 chrome.webRequest.onResponseStarted.addListener( imageFilter, { urls: ['http://*/*', 'https://*/*'], types: ['image'] }, ['responseHeaders']);
@@ -34,14 +26,16 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
 
 chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
   if (tabId<0){ return; }
+  if (changeInfo.status=="loading"){
+    tabLoaded=false;
+    Cloudinary.getTab(tabId).reset();
+  }
   if (tab && tab.url.indexOf("chrome-devtools://")!==0){
-    if (changeInfo.status=="loading"){
-      Cloudinary.getTab(tabId).reset();
-    }
     if (changeInfo.status=="complete"){
       var tab = Cloudinary.getTab(tabId);
-      tab.updateContentScript();
+      tab.updateContentState();
       tab.notifyLoadComplete();
+
     }
   }
 });

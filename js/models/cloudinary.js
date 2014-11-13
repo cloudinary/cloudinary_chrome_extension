@@ -10,7 +10,9 @@ var Cloudinary = function(tabId){
 Cloudinary.prototype.reset = function(size){
   this._images = new Array(); 
   this._cached_images= new Array(); 
+  this.tabLoaded=false;
   this.clearBadge();
+  this.listeners = [];
 }
 
 Cloudinary.prototype.syncBackground= function (method,originArgs){
@@ -53,13 +55,15 @@ Cloudinary.prototype.notify= function(res){
   if (res && res.containsErrors()){
     this.log(res.errorMessage(),res.url);
   }
-  
   if (this.hasErrors()){
     this.badge(this.errors().length,'#FF0000');
   }else if (this.hasCloudinaries()){
     this.badge(this.cloudinaries().length,'#29a729');
   }else {
     this.badge(this.images().length,'#cccccc');
+  }
+  if (this.tabLoaded){
+    this.updateContentState()
   }
 }
 
@@ -119,17 +123,24 @@ Cloudinary.prototype.cached= function(index){
 
 Cloudinary.prototype.preloadCachedImagesHeaders = function(){
   var tab= this;
+  var itemsLoaded =0 ; 
+  this._cached_images.reduce(function(url){
+    return tab.find(url).length>0;
+  })
   this.cached().forEach(function(url){
-    if (tab.find(url).length==0) {
-      var img = Image.fromUrl(url);
-      img.addListener('headers-loaded',function(e){
-        tab.addImage(img) ;
-        tab.notify(img);
-      })
-    }
+    var img = Image.fromUrl(url);
+    img.addListener('headers-loaded',function(e){
+      tab.addImage(img) ;
+      tab.notify(img);
+      itemsLoaded++;
+      if (itemsLoaded==tab.cached().length){
+        tab.emit('cache_loaded',{});
+      }
+    })
   });
 }
 Cloudinary.prototype.addCachedImage = function(url){
+  if ( this._cached_images.indexOf(url) >-1 ) { return ;}
   this._cached_images.push(url)
   this.syncBackground('addCachedImage',arguments)
 }
@@ -170,15 +181,7 @@ Cloudinary.prototype.isActive = function(){
   return Cloudinary.activeTabId==this.tabId;
 }
 
-Cloudinary.updateContentScripts = function(){
-  for (var id in Cloudinary.tabs){
-    var tab = Cloudinary.tabs[id]
-    if (tab){
-      tab.updateContentScript();
-    }
-  }
-}
-Cloudinary.prototype.updateContentScript = function(){
+Cloudinary.prototype.updateContentState= function(){
   if (this.executionContext!='background') { return ;}
   if (this.imagesReportedToContent==this._images.length){ return; }
   this.imagesReportedToContent = this._images.length;
@@ -188,6 +191,7 @@ Cloudinary.prototype.updateContentScript = function(){
 
 Cloudinary.prototype.notifyLoadComplete= function(){
   if (this.executionContext!='background') { return ;}
+  this.tabLoaded=true;
   var request = {type:'tabLoaded'};
   chrome.tabs.sendMessage(this.tabId,request, function(response) {});
 }
@@ -234,18 +238,6 @@ Cloudinary.defaults = {
   }
 }
 
-Cloudinary.updatePluginIcon = function(pluginEnabled){
-  console.log('updatePluginIcon',pluginEnabled)
-  if (pluginEnabled){
-    chrome.browserAction.setBadgeText({text: 'true'});
-    chrome.browserAction.setIcon({path: "/icons/icon19.png"});
-  }else{
-    chrome.browserAction.setIcon({path: chrome.extension.getURL("/icons/iconbw19.png")});
-    chrome.browserAction.setBadgeText({text: 'false'});
-  }
-}
-
-
 Cloudinary.fromJSON = function(data){
   var c = new Cloudinary(1);
   for (var attr in data) {
@@ -261,3 +253,24 @@ Cloudinary.fromJSON = function(data){
 Cloudinary.tabs = {}
 
 
+Cloudinary.prototype.addListener = function(event,listener){
+  if (this.listeners[event]==null){
+    this.listeners[event] = [];
+  }
+  this.listeners[event].push(listener)
+}
+
+Cloudinary.prototype.removeListener = function(event,listener){
+  if (this.listeners[event]==null){
+    return;
+  }
+  this.listeners[event] = this.listeners[event].filter(function(_listener){ if (_listener!=listener) return _listener})
+}
+
+Cloudinary.prototype.emit= function(event,data){
+  if (this.listeners[event]){
+    this.listeners[event].forEach(function(subscriber){
+      subscriber(data,this);
+    },this);
+  }
+}

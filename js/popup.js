@@ -4,22 +4,18 @@ function preload(){
   var tabInfoLink = document.getElementById('tabInfoLink');
   chrome.runtime.getBackgroundPage(function(backgroundPage){
     Cloudinary = backgroundPage.Cloudinary;
-    try{
-      tab = Cloudinary.getCurrent()
-      tab.preloadCachedImagesHeaders();
-      tabInfoLink.setAttribute('href',tabInfoLink.getAttribute('data-url').replace("{id}",tab.tabId))
-    }catch(e){
-      console.log(e)
-    }
+    tab = Cloudinary.getCurrent()
+    tab.addListener('cache_loaded',function(){
+      refreshDisplay();
+      document.getElementById('loader').style.display='none';
+    })
+    tab.preloadCachedImagesHeaders();
+    tabInfoLink.setAttribute('href',tabInfoLink.getAttribute('data-url').replace("{id}",tab.tabId))
     init();
   })
 }
 
-function init(){
-  document.getElementById("toggleHighlight").addEventListener('change',function(e){
-    tab.toggleElementsHighlight(e.target.checked)
-  })
-  document.getElementById("toggleHighlight").checked = tab.getHighlightStatus();
+function refreshDisplay(){
   var counter = document.getElementById('counter');
   var errorsHTML = ""
   for (var i = 0, l =tab.errors().length; i < l; i ++) {
@@ -38,6 +34,12 @@ function init(){
   document.getElementById("errorCount").innerHTML = tab.errors().length
   document.getElementById("cacheCount").innerHTML = tab.cached().length
   document.getElementById('errors-container').innerHTML = errorsHTML;
+}
+function init(){
+  document.getElementById("toggleHighlight").addEventListener('change',function(e){
+    tab.toggleElementsHighlight(e.target.checked)
+  })
+  document.getElementById("toggleHighlight").checked = tab.getHighlightStatus();
 }
 
 function errorTemplate(error,index){
