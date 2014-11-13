@@ -1,0 +1,26 @@
+body
+{
+  min-width: 350px;
+  margin: 0px;
+  font-family: Segoe UI, Arial, sans-serif;
+  font-size: 13px;
+  color: #545454;
+  background-color: #f8f6f2;
+  padding:10px;
+}
+
+.image{
+  margin-bottom:10px;
+  border-bottom:1px solid #cccccc;
+}
+.thumbnail{
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  width:70px;
+  height:70px;
+}
+.url{
+  color:gray;
+}
+

@@ -108,6 +108,11 @@ header
   margin-bottom:10px;
 }
 
+.stat.link{
+  color:blue;
+  text-decoration:underline;
+  cursor:pointer;
+}
 
 /* on/off switch */
 .onoffswitch {

@@ -1,12 +1,13 @@
-
 var Cloudinary,tab;
 function preload(){
   
+  var tabInfoLink = document.getElementById('tabInfoLink');
   chrome.runtime.getBackgroundPage(function(backgroundPage){
     Cloudinary = backgroundPage.Cloudinary;
     try{
       tab = Cloudinary.getCurrent()
       tab.preloadCachedImagesHeaders();
+      tabInfoLink.setAttribute('href',tabInfoLink.getAttribute('data-url').replace("{id}",tab.tabId))
     }catch(e){
       console.log(e)
     }
