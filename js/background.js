@@ -9,9 +9,7 @@ function imageFilter(details) {
   var res = Image.fromDetails(details);
   tab.addImage(res);
   res.addListener('headers-loaded',function(data,sender){
-    if (res.isCloudinary()){
-      tab.notify(res);
-    }
+    tab.notify(res);
   })
 }
 
@@ -35,9 +33,7 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
 
 
 chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
-  if (tabId<0){
-    return;
-  }
+  if (tabId<0){ return; }
   if (tab && tab.url.indexOf("chrome-devtools://")!==0){
     if (changeInfo.status=="loading"){
       Cloudinary.getTab(tabId).reset();
@@ -51,9 +47,7 @@ chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
 });
 
 chrome.tabs.onActivated.addListener(function (active) {
-  if (active.tabId<0){
-    return;
-  }
+  if (active.tabId<0){ return; }
   chrome.tabs.get(active.tabId,function(tab){
     if (tab && tab.url.indexOf("chrome-devtools://")!==0){
       Cloudinary.setCurrent(active.tabId).notify();
@@ -61,4 +55,10 @@ chrome.tabs.onActivated.addListener(function (active) {
   })
 });
 
+
+chrome.tabs.onRemoved.addListener(function (tabId,info){
+  if (tabId<0){ return; }
+  Cloudinary.removeTab(tabId)
+  delete Cloudinary.tabs[tabId]
+});
 

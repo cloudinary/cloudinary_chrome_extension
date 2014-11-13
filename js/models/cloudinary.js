@@ -46,7 +46,7 @@ Cloudinary.prototype.badge = function(text,color){
 
 
 Cloudinary.prototype.clearBadge = function(){
-  this.badge('')
+  this.badge('',"#cccccc")
 }
 
 Cloudinary.prototype.notify= function(res){
@@ -56,8 +56,10 @@ Cloudinary.prototype.notify= function(res){
   
   if (this.hasErrors()){
     this.badge(this.errors().length,'#FF0000');
-  }else{
+  }else if (this.hasCloudinaries()){
     this.badge(this.cloudinaries().length,'#29a729');
+  }else {
+    this.badge(this.images().length,'#cccccc');
   }
 }
 
@@ -98,6 +100,10 @@ Cloudinary.prototype.errors = function(index){
 Cloudinary.prototype.hasErrors = function(){
   return this.errors().length>0;
 }
+Cloudinary.prototype.hasCloudinaries = function(){
+  return this.cloudinaries().length>0;
+}
+
 
 Cloudinary.prototype.cloudinaries = function(index){
   var allCloudinaries= this._images.filter(function(image){ return image.isCloudinary()});
@@ -195,6 +201,13 @@ Cloudinary.getTab = function(tabId){
   return Cloudinary.tabs[tabId];
 }
 
+Cloudinary.removeTab = function(tabId){
+  if (Cloudinary.hasTab(tabId)){
+    Cloudinary.tabs[tabId] = null;
+    return true;
+  }
+  return false;
+}
 Cloudinary.hasTab = function(tabId){
   var result = Cloudinary.tabs[tabId]!=null
   console.log('has tab ? ',result)
