@@ -34,8 +34,8 @@
 #CLOUDINARY{
 }
 #CLOUDINARY_INFO{
-    position:fixed;
-    right:40px;
+    position:absolute;
+    left:0px;
     top:0px;
     width:300px;
     overflow-x:scroll;
@@ -76,6 +76,10 @@
   word-wrap:break-word;
 }
 
+#CLOUDINARY_INFO .closeBtn{
+  color: gray;
+  font-weight: bold;
+}
 
 .image-info-container{
   position:absolute;

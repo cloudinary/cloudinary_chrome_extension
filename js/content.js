@@ -103,9 +103,31 @@ function augmentHostPage() {
     info.setAttribute('id', "CLOUDINARY_INFO")
     info.setAttribute('class', "CLOUDINARY_INFO")
 
+    info.addEventListener('mousedown', infoMouseDown, false);
+    window.addEventListener('mouseup', infoMouseUp, false);
+    
     body.insertBefore(info, body.childNodes[0]);
   }
+}
 
+function infoMouseUp()
+{
+  window.removeEventListener('mousemove', divMove, true);
+}
+
+function infoMouseDown(e){
+  window.addEventListener('mousemove', divMove, true);
+  var div = document.getElementById('CLOUDINARY_INFO');
+  div.setAttribute('data-cld-pos-x',e.layerX)
+  div.setAttribute('data-cld-pos-y',e.layerY)
+}
+
+function divMove(e){
+  var div = document.getElementById('CLOUDINARY_INFO');
+  var offsetX= div.getAttribute('data-cld-pos-x')
+  var offsetY = div.getAttribute('data-cld-pos-y')
+  div.style.top = (e.clientY - offsetY) + 'px';
+  div.style.left = (e.clientX - offsetX)+ 'px';
 }
 
 function highlightImagesOnPage() {
@@ -167,6 +189,8 @@ function highlightImageElement(elements, image) {
       var boudingBox = event.target.getBoundingClientRect();
       var alt = document.getElementById("CLOUDINARY_INFO");
       alt.style.display = "block";
+      alt.style.top = (boudingBox.bottom+window.scrollY)+'px';
+      alt.style.left= (boudingBox.right+window.scrollX)+'px';
       alt.innerHTML = imageInfo(image);
 
     }, false)
@@ -176,6 +200,7 @@ function highlightImageElement(elements, image) {
 function imageInfo(image) {
   var html = "";
   //html+='<div style="float:right;opacity:0.5;width:70px;height:100px;overflow:hidden"><img src="'+image.url+'" alt=""/></div>'
+  html += '<div style="float:right" class="closeBtn"><a href="#" onclick="document.getElementById(\'CLOUDINARY_INFO\').style.display=\'none\';return false">[x]</a></div>'
   html += '<a class="resourceLink" href="' + image.url + '" target="_blank">' + image.fileName() + '</a>'
   if (image.isCloudinary()) {
     html += '<div class="image-cloudinary cloudinary-icon"></div>';
@@ -200,7 +225,6 @@ function imageInfo(image) {
     html += '<br/>'
   }
   html += '</div>'
-  html += '<div style="float:right"><a style="color:red" href="#" onclick="document.getElementById(\'CLOUDINARY_INFO\').style.display=\'none\';return false">close</a></div>'
   return html;
 }
 
