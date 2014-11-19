@@ -5,7 +5,9 @@ function imageFilter(details) {
   var res = Image.fromDetails(details);
   tab.addImage(res);
   res.addListener('headers-loaded',function(data,sender){
-    tab.notify(res);
+    if (res.isCloudinary()){
+      tab.notify(res);
+    }
   })
 }
 

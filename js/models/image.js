@@ -26,7 +26,7 @@ Image.fromDetails = function(details){
 
 Image.fromUrl= function(url){
   var res = new Image(url);
-  res.parseResponseHeaders();
+  res.reloadHeaders();
   return res;
 }
 
@@ -58,15 +58,19 @@ Image.prototype.parseResponseHeaders= function(responseHeaders){
       this.responseHeaders[v.name]= v.value;
     }
   }
-  if (this.getHeader('Server')==null){
-    this.reloadHeaders();
-  } else { 
+  if (this.getHeader('Server')){
     var self = this;
     setTimeout(function(){ self.emit('headers-loaded') },10);
   }
 }
 
+
+Image.prototype.headersLoaded = function() {
+  return this.responseHeaders != null && Object.keys(this.responseHeaders).length >    0;
+}
+
 Image.prototype.reloadHeaders= function(){
+  this.responseHeaders = {}
   var req = new XMLHttpRequest();
   req.open("HEAD", this.url, true);
   var self= this;
@@ -153,20 +157,20 @@ Image.prototype.errorMessage = function(){
   return this.getHeader('X-Cld-Error');
 }
 Image.prototype.containsErrors = function(){
-  var hasError = false;
+  if (this._hasError!=null) return this._hasError;
+  this._hasError = false;
   var errorMessage= this.getHeader('X-Cld-Error')
   if (errorMessage!=null){
-    hasError=true
+    this._hasError=true
   }
-  return hasError;
+  return this._hasError;
 }
 
 Image.prototype.isCloudinary = function(){
-  var isCloudinary = this.getHeader('Server') == 'cloudinary'
-  return isCloudinary;
+  if (this._isCloudinary!=null) return this._isCloudinary;
+  this._isCloudinary = this.getHeader('Server') == 'cloudinary'
+  return this._isCloudinary;
 }
-
-
 
 
 /*

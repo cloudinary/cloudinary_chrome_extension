@@ -12,6 +12,8 @@ Cloudinary.prototype.reset = function(size){
   this._cached_images= new Array(); 
   this.tabLoaded=false;
   this.clearBadge();
+  this._hasCloudinaries = false;
+  this._containsErrors = false;
   this.listeners = [];
 }
 
@@ -102,10 +104,10 @@ Cloudinary.prototype.errors = function(index){
 }
 
 Cloudinary.prototype.hasErrors = function(){
-  return this.errors().length>0;
+  return this._containsErrors;
 }
 Cloudinary.prototype.hasCloudinaries = function(){
-  return this.cloudinaries().length>0;
+  return this._hasCloudinaries;
 }
 
 
@@ -121,19 +123,31 @@ Cloudinary.prototype.cached= function(index){
   return this._cached_images;
 }
 
+Cloudinary.prototype.consolidateCacheArray = function(){
+  this._cached_images = this._cached_images.filter(function(url){
+    return url.indexOf('http')>=0 && this.find(url).length == 0;
+  },this)
+}
 Cloudinary.prototype.preloadCachedImagesHeaders = function(){
+  this.consolidateCacheArray();
   var tab= this;
   var itemsLoaded =0 ; 
-  this._cached_images.reduce(function(url){
-    return tab.find(url).length>0;
-  })
+  var itemsToLoad = tab.cached().length ;
+
+  console.log(itemsToLoad)
+  if (itemsToLoad==0){
+    this.emit('cache_loaded',{});
+  }
+  
   this.cached().forEach(function(url){
     var img = Image.fromUrl(url);
     img.addListener('headers-loaded',function(e){
       tab.addImage(img) ;
       tab.notify(img);
       itemsLoaded++;
-      if (itemsLoaded==tab.cached().length){
+      console.log("sync",itemsLoaded,itemsToLoad)
+      if (itemsLoaded==itemsToLoad){
+        console.log(3)
         tab.emit('cache_loaded',{});
       }
     })
@@ -147,6 +161,12 @@ Cloudinary.prototype.addCachedImage = function(url){
 Cloudinary.prototype.addImage= function(res){
   if (!(res instanceof Image)){
     res = Image.fromJSON(res);
+  }
+  if (res.isCloudinary()){
+    this._hasCloudinaries= true;
+  }
+  if (res.containsErrors()){
+    this._containsErrors = true;
   }
   this.syncBackground('addImage',arguments)
   this._images.push(res);
@@ -165,7 +185,7 @@ Cloudinary.prototype.toggleElementsHighlight = function(status){
     Content.toggleHighlight(this.highlightElements)
   }else{
     this.syncContent('toggleElementsHighlight',arguments)
-  }
+}
 }
 
 Cloudinary.prototype.log = function(message,url){
