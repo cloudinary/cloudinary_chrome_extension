@@ -30,7 +30,9 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     createOrphanImageObjects();
   } else if (request.type == "tabLoaded") {
     setTimeout(function() {
-      Content.toggleHighlight(tab.getHighlightStatus());
+      if (tab){
+        Content.toggleHighlight(tab.getHighlightStatus());
+      }
     }, 2000);
   } else if (request.type == 'current::method') {
     if (tab) {
