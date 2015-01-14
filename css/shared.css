@@ -1,0 +1,11 @@
+span.title{
+  color:white;
+  float: left;
+  height: 50px;
+  padding: 15px 15px 0px 50px;
+  font-size: 18px;
+  line-height: 20px;
+  background-image: url('/icons/icon48.png');
+  background-repeat: no-repeat;
+  background-position: top left;
+}

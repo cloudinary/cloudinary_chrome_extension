@@ -1,42 +1,84 @@
-<html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Cloudinary Plugin Options</title>
-<script src="/js/models/cloudinary.js"></script>
-<script src="/js/options.js"></script>
-<style>
-  label{
-    display:block;
-  }
-</style>
-</head>
-<body>
-<table>
-  <tr>
-    <td style="padding-right: 8px">
-      <img src="/icons/icon48.png">
-    </td>
-    <td>
-      <h1>Plugin Options</h1>
-    </td>
-  </tr>
-</table>
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Cloudinary Plugin Options</title>
+
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/shared.css" rel="stylesheet">
+    <link href="/css/info.css" rel="stylesheet">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="/js/models/cloudinary.js"></script>
+    <script src="/js/options.js"></script>
+  </head>
+  <body>
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+      <div class="container">
+        <div class="navbar-header">
+          <span class="title">Options</span>
+        </div>
+      </div>
+    </nav>
 
 
-<h2>Overlay</h2>
+    <div class="container">
+      <div class="row">
+        <div class="col-12">
 
-<label>
-  <input type="checkbox" id="overlay_image_metadata"> Show image metadata
-</label>
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <h3 class="panel-title">Overlay</h3>
+            </div>
+            <div class="panel-body">
+              <div class="checkbox">
+                <label><input type="checkbox" value="" id="overlay_image_metadata">Show Image Metadata</label>
+              </div>
+              <div class="checkbox">
+                <label><input type="checkbox" value="" id="overlay_cloudinary_metadata">Show Cloudinary Metadata</label>
+              </div>
+              <div class="checkbox">
+                <label><input type="checkbox" value="" id="overlay_cloudinary_errors">Show Cloudinary Errors</label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12">
 
-<label>
-  <input type="checkbox" id="overlay_cloudinary_metadata"> Show Cloudinary metadata
-</label>
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <h3 class="panel-title">General</h3>
+            </div>
+            <div class="panel-body">
+              <div class="checkbox">
+                <label><input type="checkbox" value="" id="general_akamai_headers">Enhance With Akamai Headers</label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
 
-<label>
-  <input type="checkbox" id="overlay_cloudinary_errors"> Show Cloudinary Errors
-</label>
-<div id="status"></div>
-</body>
+      <div class="row">
+        <div class="col-12">
+          <div id="status"></div>
+        </div>
+      </div>
+    </div>
+
+  </body>
 </html>
 

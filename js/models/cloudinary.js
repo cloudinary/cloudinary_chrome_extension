@@ -251,6 +251,9 @@ Cloudinary.getCurrent = function(){
 }
 
 Cloudinary.defaults = {
+  general:{
+    general_akamai_headers:false
+  },
   overlay:{
     overlay_image_metadata:true,
     overlay_cloudinary_metadata:true,
