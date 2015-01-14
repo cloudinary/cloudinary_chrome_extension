@@ -15,8 +15,10 @@ function checkbox_event_listener(event){
   var data = {};
   data[event.target.id] = event.target.checked;
   chrome.storage.local.set(data,function(){
+    chrome.extension.sendRequest({id:"settings_updated"});
     var status = document.getElementById('status');
     status.textContent = 'Options saved.';
+
     setTimeout(function() {
       status.textContent = '';
     }, 750);
