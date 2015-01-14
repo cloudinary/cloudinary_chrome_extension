@@ -3,7 +3,7 @@ var Image = function(url){
   this.url = url;
   this.cached=false;
   this.listeners = [];
-}
+};
 
 Image.prototype.hash= function(){
   if (this._hash) return this._hash;
@@ -12,32 +12,32 @@ Image.prototype.hash= function(){
     this._hash= CryptoJS.SHA1(this.url);
   }
   return this._hash;
-}
+};
 
 Image.prototype.fileName = function(){
-  return this.url.substring(this.url.lastIndexOf('/')+1)
-}
+  return this.url.substring(this.url.lastIndexOf('/')+1);
+};
 
 Image.fromDetails = function(details){
   var res = new Image(details.url);
   res.parseResponseHeaders(details.responseHeaders);
   return res;
-}
+};
 
 Image.fromUrl= function(url){
   var res = new Image(url);
   res.reloadHeaders();
   return res;
-}
+};
 
 Image.prototype.imageDimensions = function(image){
-  this.dimensions = { width: image.width, height:image.height}
-  this.naturalDimensions = { width: image.naturalWidth, height:image.naturalHeight}
-}
+  this.dimensions = { width: image.width, height:image.height};
+  this.naturalDimensions = { width: image.naturalWidth, height:image.naturalHeight};
+};
 
 Image.prototype.getDimensions = function(){
-  return {actual:this.dimensions,natural:this.naturalDimensions,formatted:"actual "+this.dimensions.width+"x"+this.dimensions.height+" natural "+this.naturalDimensions.width+"x"+this.naturalDimensions.height}
-}
+  return {actual:this.dimensions,natural:this.naturalDimensions,formatted:"actual "+this.dimensions.width+"x"+this.dimensions.height+" natural "+this.naturalDimensions.width+"x"+this.naturalDimensions.height};
+};
 
 Image.fromJSON = function(json){
   var res = new Image();
@@ -45,32 +45,32 @@ Image.fromJSON = function(json){
     res[attr]= json[attr];
   }
   return res;
-}
+};
 
 Image.prototype.parseResponseHeaders= function(responseHeaders){
-  if (responseHeaders==null) {
+  if (responseHeaders===null) {
     responseHeaders = [];
   }
-  this.responseHeaders = {}
+  this.responseHeaders = {};
   for (var i = 0, l = responseHeaders.length; i < l; i ++) {
     var v = responseHeaders[i];
-    if(v.name!=null && v.name!=''){
-      this.responseHeaders[v.name]= v.value;
+    if(v.name!==null && v.name!==''){
+      this.appendHeader(v.name,v.value);
     }
   }
   if (this.getHeader('Server')){
     var self = this;
-    setTimeout(function(){ self.emit('headers-loaded') },10);
+    setTimeout(function(){ self.emit('headers-loaded'); },10);
   }
-}
+};
 
 
 Image.prototype.headersLoaded = function() {
-  return this.responseHeaders != null && Object.keys(this.responseHeaders).length >    0;
-}
+  return this.responseHeaders && Object.keys(this.responseHeaders).length >0;
+};
 
 Image.prototype.reloadHeaders= function(){
-  this.responseHeaders = {}
+  this.responseHeaders = {};
   var req = new XMLHttpRequest();
   req.open("HEAD", this.url, true);
   var self= this;
@@ -80,35 +80,47 @@ Image.prototype.reloadHeaders= function(){
     }
   };
   req.send(null);
-}
+};
 
 Image.prototype.addXhrHeaders = function(xhr){
   var allHeaders = xhr.getAllResponseHeaders();
-  if (allHeaders!=null){
+  if (allHeaders!==null){
     allHeaders = allHeaders.split('\n');
-    allHeaders = allHeaders.map(function(header){return header.split(/\: (.+)/)})
+    allHeaders = allHeaders.map(function(header){return header.split(/\: (.+)/);});
     allHeaders.forEach(function(header){
-      if(header[0]!=null && header[0]!=''){
-        this.responseHeaders[header[0]] = header[1]
+      if(header[0]!==null && header[0]!==''){
+        this.appendHeader(header[0],header[1]);
       }
-    },this)
+    },this);
   }
-  this.emit('headers-loaded')
-}
+  this.emit('headers-loaded');
+};
+
+Image.prototype.appendHeader = function(name,value){
+  var header_exists = Object.keys(this.responseHeaders).indexOf(name)>0;
+  if (header_exists){
+    if (!Array.isArray(this.responseHeaders[name])){
+      this.responseHeaders[name] = [this.responseHeaders[value]];
+    }
+    this.responseHeaders[name].push(value);
+  }else{
+    this.responseHeaders[name] = value;
+  }
+};
 
 Image.prototype.addListener = function(event,listener){
-  if (this.listeners[event]==null){
+  if (this.listeners[event]===undefined){
     this.listeners[event] = [];
   }
-  this.listeners[event].push(listener)
-}
+  this.listeners[event].push(listener);
+};
 
 Image.prototype.removeListener = function(event,listener){
-  if (this.listeners[event]==null){
+  if (this.listeners[event]===undefined){
     return;
   }
-  this.listeners[event] = this.listeners[event].filter(function(_listener){ if (_listener!=listener) return _listener})
-}
+  this.listeners[event] = this.listeners[event].filter(function(_listener){ if (_listener!=listener) return _listener;});
+};
 
 Image.prototype.emit= function(event,data){
   if (this.listeners[event]){
@@ -116,26 +128,26 @@ Image.prototype.emit= function(event,data){
       subscriber(data,this);
     },this);
   }
-}
+};
 
 Image.prototype.getHeader= function(name){
   return this.responseHeaders && this.responseHeaders[name];
-}
+};
 
 Image.prototype.statusCode= function(){
-  var code = this.getHeader('Status')
-  if (code==null){
+  var code = this.getHeader('Status');
+  if (code===null){
     code = "0";
   }else{
     code = code.split(' ')[0];
   }
   return code;
-}
+};
 
 Image.prototype.getSize = function(){
   var bytes = this.getHeader('Content-Length') || 0;
   var size = bytes;
-  var unit = 'bytes'
+  var unit = 'bytes';
   if (size>1024){
     size = (size / 1024).toFixed(2);
     unit='kb';
@@ -145,32 +157,33 @@ Image.prototype.getSize = function(){
     unit='mb';
   }
   return {bytes:bytes,formatted: size+' '+unit};
-}
+};
 
 Image.prototype.getType = function() {
   if (this.containsErrors()) {return "error";}
-  if (this.isCloudinary()) {return "cloudinary"}
-  return "general"
-}
+  if (this.isCloudinary()) {return "cloudinary";}
+  return "general";
+};
 
 Image.prototype.errorMessage = function(){
   return this.getHeader('X-Cld-Error');
-}
+};
+
 Image.prototype.containsErrors = function(){
-  if (this._hasError!=null) return this._hasError;
+  if (this._hasError!==undefined) return this._hasError;
   this._hasError = false;
-  var errorMessage= this.getHeader('X-Cld-Error')
-  if (errorMessage!=null){
-    this._hasError=true
+  var errorMessage= this.getHeader('X-Cld-Error');
+  if (errorMessage!==null){
+    this._hasError=true;
   }
   return this._hasError;
-}
+};
 
 Image.prototype.isCloudinary = function(){
-  if (this._isCloudinary!=null) return this._isCloudinary;
-  this._isCloudinary = this.getHeader('Server') == 'cloudinary'
+  if (this._isCloudinary!==undefined) return this._isCloudinary;
+  this._isCloudinary = this.getHeader('Server') == 'cloudinary';
   return this._isCloudinary;
-}
+};
 
 
 /*

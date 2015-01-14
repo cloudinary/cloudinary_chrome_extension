@@ -12,20 +12,20 @@ Content.toggleHighlight = function(highlight) {
     markImageContainingElements();
     highlightImagesOnPage();
   } else {
-    Array.prototype.slice.call(document.querySelectorAll( ".image-info-container")).forEach(function(item) { item.parentNode.removeChild(item) });
+    Array.prototype.slice.call(document.querySelectorAll( ".image-info-container")).forEach(function(item) { item.parentNode.removeChild(item); });
     var info = document.getElementById('CLOUDINARY_INFO');
     if (info) {
       info.parentNode.removeChild(info);
     }
   }
-}
+};
 
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
   if (request.type == "log") {
-    logError(request.message, request.url)
+    logError(request.message, request.url);
   } else if (request.type == "data") {
     tab = Cloudinary.fromJSON(request.data);
-    tab.executionContext = 'content'
+    tab.executionContext = 'content';
     markImageContainingElements();
     createOrphanImageObjects();
   } else if (request.type == "tabLoaded") {
@@ -39,9 +39,9 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
       tab[request.method].apply(tab, request.args);
     }
   } else {
-    console.log('unhandled request', request)
+    console.log('unhandled request', request);
   }
-})
+});
 
 
 function createOrphanImageObjects() {
@@ -54,7 +54,7 @@ function createOrphanImageObjects() {
 
 
 function markImageContainingElements() {
-  var elements = document.getElementsByTagName('*')
+  var elements = document.getElementsByTagName('*');
   var type = "";
   for (var i = 0, l = elements.length; i < l; i++) {
     var element = elements[i];
@@ -79,22 +79,22 @@ function markImageContainingElements() {
 
 function extractCssUrl(input) {
   if (input.indexOf('://')<0) return null;
-  if (input == null) { return null; }
-  matches = input.match(/(?:\([\",\']?)(.*)(?:[\",\']?\))/)
+  if (input === null) { return null; }
+  matches = input.match(/(?:\([\",\']?)(.*)(?:[\",\']?\))/);
   if (!Array.isArray(matches)) { return null; }
-  return matches[1]
+  return matches[1];
 }
 
 function markHtmlElement(element, imageUrl, type) {
-  var imgObj = tab.find(imageUrl)[0]
+  var imgObj = tab.find(imageUrl)[0];
   if (imageUrl.indexOf(':') < 0) {
     imageUrl = document.location.origin + imageUrl;
   }
-  if (imgObj == null) {
-    element.setAttribute('data-cld-orphan', 'true')
+  if (imgObj === null) {
+    element.setAttribute('data-cld-orphan', 'true');
   }
-  element.setAttribute('data-cld-image-abs-url', imageUrl)
-  element.setAttribute('data-cld-type', type)
+  element.setAttribute('data-cld-image-abs-url', imageUrl);
+  element.setAttribute('data-cld-type', type);
 }
 
 function augmentHostPage() {
@@ -102,8 +102,8 @@ function augmentHostPage() {
     var body = document.body;
     var info = document.createElement('div');
     info.id = "CLOUDINARY_INFO";
-    info.setAttribute('id', "CLOUDINARY_INFO")
-    info.setAttribute('class', "CLOUDINARY_INFO")
+    info.setAttribute('id', "CLOUDINARY_INFO");
+    info.setAttribute('class', "CLOUDINARY_INFO");
 
     info.addEventListener('mousedown', infoMouseDown, false);
     window.addEventListener('mouseup', infoMouseUp, false);
@@ -120,14 +120,14 @@ function infoMouseUp()
 function infoMouseDown(e){
   window.addEventListener('mousemove', divMove, true);
   var div = document.getElementById('CLOUDINARY_INFO');
-  div.setAttribute('data-cld-pos-x',e.layerX)
-  div.setAttribute('data-cld-pos-y',e.layerY)
+  div.setAttribute('data-cld-pos-x',e.layerX);
+  div.setAttribute('data-cld-pos-y',e.layerY);
 }
 
 function divMove(e){
   var div = document.getElementById('CLOUDINARY_INFO');
-  var offsetX= div.getAttribute('data-cld-pos-x')
-  var offsetY = div.getAttribute('data-cld-pos-y')
+  var offsetX= div.getAttribute('data-cld-pos-x');
+  var offsetY = div.getAttribute('data-cld-pos-y');
   div.style.top = (e.clientY - offsetY) + 'px';
   div.style.left = (e.clientX - offsetX)+ 'px';
 }
@@ -136,18 +136,18 @@ function highlightImagesOnPage() {
   tab.images().forEach(function(image) {
     var elements = document.querySelectorAll('[data-cld-image-abs-url="' + image.url + '"]');
     highlightImageElement(elements, image);
-  })
+  });
 }
 
 function highlightImageElement(elements, image) {
-  var styleTemplate = "width:#{w}px;height:#{h}px;top:#{t}px;left:#{l}px;"
+  var styleTemplate = "width:#{w}px;height:#{h}px;top:#{t}px;left:#{l}px;";
   var bodyRect = document.body.getBoundingClientRect();
   for (var i = 0, l = elements.length; i < l; i++) {
     var elm = elements[i];
     var boudingBox = elm.getBoundingClientRect();
     var parentBox = elm.parentNode.getBoundingClientRect();
     var highlight = document.createElement('div');
-    var cssClass = "image-info-container "
+    var cssClass = "image-info-container ";
     if (image.isCloudinary()) {
       cssClass += 'image-cloudinary ';
     }
@@ -159,9 +159,9 @@ function highlightImageElement(elements, image) {
     highlight.setAttribute('class', cssClass);
     var top = 0 ,left = 0 ;
     var traversalNode= elm;
-    var parseOffsetParent = true 
+    var parseOffsetParent = true ;
     var deep=0;
-    while(parseOffsetParent==true){
+    while(parseOffsetParent===true){
       parseOffsetParent= false;
       top += traversalNode.offsetTop;
       left += traversalNode.offsetLeft;
@@ -180,7 +180,7 @@ function highlightImageElement(elements, image) {
     if (elm.parentNode){
       elm.parentNode.insertBefore(highlight, elm.nextSibling);
     }else{
-      console.log('cant find parent element')
+      console.log('cant find parent element');
     }
     highlight.addEventListener('mouseover', function(event) {
       var bodyRect = document.body.getBoundingClientRect();
@@ -195,15 +195,15 @@ function highlightImageElement(elements, image) {
       alt.style.left= (boudingBox.right+window.scrollX)+'px';
       alt.innerHTML = imageInfo(image);
 
-    }, false)
+    }, false);
   }
 }
 
 function imageInfo(image) {
   var html = "";
   //html+='<div style="float:right;opacity:0.5;width:70px;height:100px;overflow:hidden"><img src="'+image.url+'" alt=""/></div>'
-  html += '<div style="float:right" class="closeBtn"><a href="#" onclick="document.getElementById(\'CLOUDINARY_INFO\').style.display=\'none\';return false">[x]</a></div>'
-  html += '<a class="resourceLink" href="' + image.url + '" target="_blank">' + image.fileName() + '</a>'
+  html += '<div style="float:right" class="closeBtn"><a href="#" onclick="document.getElementById(\'CLOUDINARY_INFO\').style.display=\'none\';return false">[x]</a></div>';
+  html += '<a class="resourceLink" href="' + image.url + '" target="_blank">' + image.fileName() + '</a>';
   if (image.isCloudinary()) {
     html += '<div class="image-cloudinary cloudinary-icon"></div>';
   }
@@ -214,35 +214,37 @@ function imageInfo(image) {
   if (image.getSize().bytes > 0) {
     html += image.getSize().formatted + '<br/>';
   }
-  if (image.getDimensions().actual.width != null) {
+  if (image.getDimensions().actual.width !== null) {
     html += image.getDimensions().formatted;
   }
   html += '</div>';
 
-  html += '<div class="headers">'
+  html += '<div class="headers">';
   var essentialHeaders = ['ETag', 'Last-Modified', 'Cache-Control', 'Date'];
+  akamai_headers= Object.keys(image.responseHeaders).filter(function(name){return name.indexOf('Akamai') > -1;});
+  essentialHeaders = essentialHeaders.concat(akamai_headers);
   for (var i = 0; i < essentialHeaders.length; i++) {
     var attr = essentialHeaders[i];
     html += '<b>' + attr + '</b> : ' + image.responseHeaders[attr];
-    html += '<br/>'
+    html += '<br/>';
   }
-  html += '</div>'
+  html += '</div>';
   return html;
 }
 
 function logError(message, url, element) {
-  console.group("%cCloudinary X-Cld-Error", "color:red ;background-color:yellow")
-  console.log(message)
+  console.group("%cCloudinary X-Cld-Error", "color:red ;background-color:yellow");
+  console.log(message);
   if (element) {
-    console.log("%o", element)
+    console.log("%o", element);
   } else {
     var elements = document.querySelectorAll('[src="' + url + '"]');
     for (var i = 0, l = elements.length; i < l; i++) {
-      var element = elements[i];
-      console.log("%o", element)
+      element = elements[i];
+      console.log("%o", element);
     }
-    if (elements.length == 0) {
-      console.log("%o", url)
+    if (elements.length === 0) {
+      console.log("%o", url);
     }
   }
   console.groupEnd();
