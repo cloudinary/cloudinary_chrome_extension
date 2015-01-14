@@ -131,7 +131,9 @@ Image.prototype.emit= function(event,data){
 };
 
 Image.prototype.getHeader= function(name){
-  return this.responseHeaders && this.responseHeaders[name];
+  var result = this.responseHeaders && this.responseHeaders[name] ;
+  if (result===undefined){result=null;}
+  return result;
 };
 
 Image.prototype.statusCode= function(){
